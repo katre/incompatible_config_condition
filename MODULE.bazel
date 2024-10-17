@@ -1,0 +1,4 @@
+module(
+    name = "incompatible_config_condition",
+    version = "0.0.1",
+)

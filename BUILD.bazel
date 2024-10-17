@@ -1,0 +1,30 @@
+# An incompatible target.
+filegroup(
+    name = "not_compatible",
+    target_compatible_with = ["@platforms//:incompatible"],
+)
+
+# A label_flag that uses that
+label_flag(
+    name = "sample_flag",
+    build_setting_default = ":not_compatible",
+)
+
+# A config_setting on the flag.
+config_setting(
+    name = "sample_flag_is_default",
+    flag_values = {
+        ":sample_flag": ":not_compatible",
+    },
+)
+
+# Use the config setting.
+genrule(
+    name = "demo",
+    srcs = [],
+    outs = ["demo.log"],
+    cmd = select({
+        ":sample_flag_is_default": "echo default > $@",
+        "//conditions:default": "echo not default > $@",
+    }),
+)
